@@ -86,6 +86,7 @@ object Store {
 
     fun init(ctx: Context) {
         sp = ctx.getSharedPreferences("8kpro", Context.MODE_PRIVATE)
+        Downloads.init(ctx)
         language = sp.getString("lang", "ar") ?: "ar"
         val u = sp.getString("user", null)
         val p = sp.getString("pass", null)
