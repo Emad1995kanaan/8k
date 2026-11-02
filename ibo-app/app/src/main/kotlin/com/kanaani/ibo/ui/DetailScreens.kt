@@ -49,7 +49,7 @@ import com.kanaani.ibo.data.Xtream
 private fun DetailBackdrop(image: String?, content: @Composable () -> Unit) {
     Backdrop {
         if (image != null) AsyncImage(image, null, Modifier.fillMaxSize(), contentScale = ContentScale.Crop, alpha = 0.35f)
-        Box(Modifier.fillMaxSize().background(Brush.horizontalGradient(listOf(Color(0xF00A0907), Color(0x990A0907), Color(0x550A0907)))))
+        Box(Modifier.fillMaxSize().background(Brush.horizontalGradient(listOf(Color(0xF00A0506), Color(0x990A0506), Color(0x550A0506)))))
         content()
     }
 }
@@ -164,7 +164,7 @@ fun ShowDetailScreen(nav: Navigator, x: Xtream, s: Screen.ShowDetail) {
                     }
                 }
                 LazyColumn(verticalArrangement = Arrangement.spacedBy(6.dp), contentPadding = PaddingValues(bottom = 12.dp)) {
-                    itemsIndexed(episodes, key = { _, e -> e.id }) { i, e ->
+                    itemsIndexed(episodes, key = { i, e -> e.id + "#" + i }) { i, e ->
                         val here = saved?.takeIf { it.episodeId == e.id }
                         Tile({
                             val w = Watch("series", show.id, show.name, show.poster, e.ext, e.id, e.season, e.number)

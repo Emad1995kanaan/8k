@@ -56,7 +56,7 @@ fun HomeScreen(nav: Navigator, x: Xtream) {
     LaunchedEffect(Unit) { while (true) { now = System.currentTimeMillis(); delay(60_000L - now % 60_000L) } }
     LaunchedEffect(Unit) { com.kanaani.ibo.data.Ads.refresh() }
     when (com.kanaani.ibo.data.Store.homeTheme) {
-        1 -> { BillboardHome(nav, now); return }
+        1 -> { BillboardHome(nav, x, now); return }
     }
     val first = remember { FocusRequester() }
     InitialFocus(first)
@@ -104,7 +104,7 @@ private fun RatesBar(modifier: Modifier) {
     fun f(v: Double) = String.format(java.util.Locale.ROOT, "%.2f", v)
     Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Row(
-            Modifier.clip(RoundedCornerShape(14.dp)).background(Color(0x99161209)).padding(horizontal = 18.dp, vertical = 8.dp),
+            Modifier.clip(RoundedCornerShape(14.dp)).background(Color(0x99180D0F)).padding(horizontal = 18.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(22.dp),
         ) {
@@ -119,7 +119,7 @@ private fun RatesBar(modifier: Modifier) {
 @Composable
 private fun RateItem(symbol: String, name: String, value: String) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Label(symbol, 14.sp, Color(0xFFF2C94C), FontWeight.Bold)
+        Label(symbol, 14.sp, Color(0xFFFF6B70), FontWeight.Bold)
         Spacer(Modifier.width(6.dp))
         Label(name, 14.sp, C.text2, FontWeight.SemiBold)
         Spacer(Modifier.width(8.dp))

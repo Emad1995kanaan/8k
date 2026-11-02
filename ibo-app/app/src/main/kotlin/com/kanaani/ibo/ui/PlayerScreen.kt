@@ -257,7 +257,7 @@ fun PlayerScreen(nav: Navigator, x: Xtream, s: Screen.Play, hosted: Boolean = fa
             LaunchedEffect(Unit) { InitialFocusOnce(playNow) }
             Column(
                 Modifier.align(Alignment.BottomEnd).padding(28.dp).width(300.dp).clip(RoundedCornerShape(16.dp))
-                    .background(Color(0xE6161209)).padding(16.dp),
+                    .background(Color(0xE6180D0F)).padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Label(Str.nextEpisode + " · ${Str.episode} ${next?.number ?: ""}", 15.sp, weight = FontWeight.Bold)
@@ -278,7 +278,7 @@ fun PlayerScreen(nav: Navigator, x: Xtream, s: Screen.Play, hosted: Boolean = fa
         if (s.live && showInfo) {
             Row(
                 Modifier.align(Alignment.BottomCenter).fillMaxWidth()
-                    .background(Brush.verticalGradient(listOf(Color.Transparent, Color(0xE60A0907))))
+                    .background(Brush.verticalGradient(listOf(Color.Transparent, Color(0xE60A0506))))
                     .padding(horizontal = 28.dp, vertical = 18.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {

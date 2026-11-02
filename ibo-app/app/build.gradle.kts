@@ -24,6 +24,8 @@ val providerName = brand("BRAND_PROVIDER_NAME", appName)
 val updateUrl = brand("BRAND_UPDATE_URL", "")
 // ads.json des thèmes d'accueil (vide = pas de publicités).
 val adsUrl = brand("BRAND_ADS_URL", "")
+// Clé TMDB (images et notes des films du panneau publicitaire) : secret TMDB_KEY.
+val tmdbKey = brand("BRAND_TMDB_KEY", "")
 
 // Version : fichier VERSION à la racine du dépôt (x.y.z) → versionCode = x*10000 + y*100 + z.
 val versionName0: String = rootProject.file("../VERSION").readText().trim()
@@ -46,6 +48,7 @@ android {
         buildConfigField("String", "BRAND_BACKUP_HOST", javaString(backupHost))
         buildConfigField("String", "UPDATE_URL", javaString(updateUrl))
         buildConfigField("String", "ADS_URL", javaString(adsUrl))
+        buildConfigField("String", "TMDB_KEY", javaString(tmdbKey))
     }
 
     signingConfigs {

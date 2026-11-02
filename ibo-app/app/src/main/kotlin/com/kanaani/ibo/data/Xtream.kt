@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
 
 /** Client HTTP partagé (API, lecteur, images). */
 object Http {
-    const val USER_AGENT = "8KPro/1.0 (Android)"
+    const val USER_AGENT = "BaghdadiLite/1.0 (Android)"
     val client: OkHttpClient = OkHttpClient.Builder()
         .connectTimeout(15, TimeUnit.SECONDS)
         .readTimeout(40, TimeUnit.SECONDS)
@@ -49,6 +49,7 @@ data class Show(val id: String, val name: String, val poster: String?, val ratin
 data class MovieInfo(
     val plot: String?, val genre: String?, val year: String?, val duration: String?,
     val backdrop: String?, val director: String?, val cast: String?, val rating: String?,
+    val tmdbId: String? = null,
 )
 
 data class Episode(val id: String, val title: String, val number: Int, val season: Int, val ext: String, val plot: String?, val image: String?, val duration: String?)
@@ -73,6 +74,10 @@ private fun JsonElement?.objects(): List<JsonObject> = when (this) {
 
 private fun enc(s: String) = URLEncoder.encode(s, "UTF-8")
 
+/** « AM | beIN Sports 1 | HD » → « beIN Sports 1 | HD » : préfixe du fournisseur retiré des noms de chaînes. */
+private val channelPrefix = Regex("""^\s*AM\s*\|\s*""")
+fun cleanChannel(name: String): String = name.replace(channelPrefix, "").ifBlank { name }
+
 /**
  * API Xtream Codes, chargée À LA DEMANDE (comme IBO Player) : rien n'est téléchargé d'avance ; chaque catégorie est
  * lue au moment où on l'ouvre puis gardée en mémoire pour la session.
@@ -93,28 +98,44 @@ class Xtream(val hosts: List<String>, val username: String, val password: String
         return if (action == null) base else "$base&action=$action$extra"
     }
 
-    /** Appel API avec bascule : si le serveur ne répond pas (réseau, erreur HTTP, réponse illisible), on passe au suivant. */
+    /**
+     * Appel API avec bascule : on passe au serveur suivant si celui-ci ne répond pas (réseau, erreur HTTP, réponse
+     * illisible) OU refuse le compte (identifiants inconnus, compte expiré / désactivé : le compte peut n'exister que
+     * sur l'autre serveur). Si tous refusent, on rend le premier refus (message « identifiants » / « expiré »).
+     */
     private suspend fun get(action: String?, extra: String = ""): JsonElement? = withContext(Dispatchers.IO) {
         val first = if (!primaryTried) hosts.first() else host
         primaryTried = true
+        var refused: JsonElement? = null
         for (h in listOf(first) + hosts.filter { it != first }) {
             val res = runCatching {
                 Http.api.newCall(Request.Builder().url(url(h, action, extra)).build()).execute().use { r ->
                     if (!r.isSuccessful) null else json.parseToJsonElement(r.body.string())
                 }
-            }.getOrNull()
-            if (res != null) {
-                if (h != host) { host = h; Store.rememberHost(h) }
-                return@withContext res
-            }
+            }.getOrNull() ?: continue
+            if (refuses(res, account = action == null)) { if (refused == null) refused = res; continue }
+            if (h != host) { host = h; Store.rememberHost(h) }
+            return@withContext res
         }
-        null
+        refused
     }
+
+    /** Réponse de refus : « auth » à 0, ou (infos du compte) statut autre qu'actif. */
+    private fun refuses(res: JsonElement, account: Boolean): Boolean {
+        val ui = (res as? JsonObject)?.get("user_info") as? JsonObject ?: return false
+        if (ui.str("auth") == "0") return true
+        return account && ui.str("status")?.equals("Active", ignoreCase = true) == false
+    }
+
+    /** Même adresse de flux sur les autres serveurs (pour la bascule du lecteur). */
+    fun alternates(streamUrl: String): List<String> =
+        if (!streamUrl.startsWith(host)) emptyList() else hosts.filter { it != host }.map { it + streamUrl.removePrefix(host) }
 
     @Suppress("UNCHECKED_CAST")
     private suspend fun <T : Any> cached(key: String, load: suspend () -> T?): T? {
         (cache[key] as? T)?.let { return it }
-        val v = load() ?: return null
+        // Réponse inattendue d'un serveur : pas de plantage, la liste reste simplement vide.
+        val v = try { load() } catch (e: kotlinx.coroutines.CancellationException) { throw e } catch (_: Throwable) { null } ?: return null
         cache[key] = v
         return v
     }
@@ -140,7 +161,7 @@ class Xtream(val hosts: List<String>, val username: String, val password: String
         get(action)?.objects()?.mapNotNull { o ->
             val id = o.str("category_id") ?: return@mapNotNull null
             Category(id, o.str("category_name") ?: id)
-        }
+        }?.distinctBy { it.id } // doublons (même identifiant) : feraient planter les listes
     } ?: emptyList()
 
     suspend fun liveCategories() = categories("get_live_categories")
@@ -156,8 +177,8 @@ class Xtream(val hosts: List<String>, val username: String, val password: String
         val extra = categoryId?.let { "&category_id=${enc(it)}" } ?: ""
         get("get_live_streams", extra)?.objects()?.mapNotNull { o ->
             val id = o.str("stream_id") ?: return@mapNotNull null
-            Channel(id, o.str("name") ?: id, o.str("stream_icon"), o.int("num") ?: 0, o.str("category_id"))
-        }
+            Channel(id, cleanChannel(o.str("name") ?: id), o.str("stream_icon"), o.int("num") ?: 0, o.str("category_id"))
+        }?.distinctBy { it.id }
     } ?: emptyList()
 
     /** categoryId null = tous les films. */
@@ -169,7 +190,7 @@ class Xtream(val hosts: List<String>, val username: String, val password: String
             val id = o.str("stream_id") ?: return@mapNotNull null
             Movie(id, o.str("name") ?: id, o.str("stream_icon") ?: o.str("cover"), o.str("rating"), o.str("container_extension") ?: "mp4", o.str("category_id"),
                 added = o.str("added")?.toLongOrNull() ?: 0)
-        }
+        }?.distinctBy { it.id }
     } ?: emptyList()
 
     /** categoryId null = toutes les séries. */
@@ -181,7 +202,7 @@ class Xtream(val hosts: List<String>, val username: String, val password: String
             val id = o.str("series_id") ?: return@mapNotNull null
             Show(id, o.str("name") ?: id, o.str("cover"), o.str("rating"), o.str("category_id"),
                 updated = o.str("last_modified")?.toLongOrNull() ?: 0)
-        }
+        }?.distinctBy { it.id }
     } ?: emptyList()
 
     /** Films les plus récemment ajoutés au serveur (toutes catégories). */
@@ -204,6 +225,7 @@ class Xtream(val hosts: List<String>, val username: String, val password: String
             director = i.str("director"),
             cast = i.str("cast") ?: i.str("actors"),
             rating = i.str("rating"),
+            tmdbId = i.str("tmdb_id") ?: i.str("tmdb") ?: (root["movie_data"] as? JsonObject)?.str("tmdb_id"),
         )
     }
 
@@ -231,8 +253,8 @@ class Xtream(val hosts: List<String>, val username: String, val password: String
                     image = info?.str("movie_image"),
                     duration = info?.str("duration"),
                 )
-            }.sortedBy { it.number }
-            if (eps.isNotEmpty()) seasons[season] = eps
+            }.distinctBy { it.id }.sortedBy { it.number }
+            if (eps.isNotEmpty()) seasons[season] = (seasons[season].orEmpty() + eps).distinctBy { it.id }.sortedBy { it.number }
         }
         val backdrop = (i["backdrop_path"] as? JsonArray)?.firstOrNull()?.let { (it as? JsonPrimitive)?.contentOrNull } ?: i.str("cover")
         ShowInfo(

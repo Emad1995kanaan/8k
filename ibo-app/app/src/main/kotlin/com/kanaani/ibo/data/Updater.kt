@@ -98,7 +98,7 @@ object Updater {
         val file = withContext(Dispatchers.IO) {
             runCatching {
                 val dir = File(ctx.cacheDir, "updates").apply { mkdirs(); listFiles()?.forEach { it.delete() } }
-                val out = File(dir, "8KPro-${i.name}.apk")
+                val out = File(dir, "BaghdadiLite-${i.name}.apk")
                 Http.client.newCall(Request.Builder().url(i.url).build()).execute().use { r ->
                     if (!r.isSuccessful) return@use null
                     val body = r.body
