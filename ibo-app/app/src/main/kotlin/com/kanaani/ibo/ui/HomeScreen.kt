@@ -54,6 +54,10 @@ fun HomeScreen(nav: Navigator, x: Xtream) {
     LaunchedEffect(x) { AccountCache.load(x) }
     var now by remember { mutableLongStateOf(System.currentTimeMillis()) }
     LaunchedEffect(Unit) { while (true) { now = System.currentTimeMillis(); delay(60_000L - now % 60_000L) } }
+    LaunchedEffect(Unit) { com.kanaani.ibo.data.Ads.refresh() }
+    when (com.kanaani.ibo.data.Store.homeTheme) {
+        1 -> { BillboardHome(nav, now); return }
+    }
     val first = remember { FocusRequester() }
     InitialFocus(first)
 

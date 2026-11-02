@@ -48,6 +48,9 @@ object Str {
 
     // Listes
     val all get() = t("All", "الكل", "הכול")
+    val homeTheme get() = t("Home theme", "ثيم الصفحة الرئيسية", "ערכת דף הבית")
+    val themeClassic get() = t("Classic", "الكلاسيك", "קלאסי")
+    val themeBillboard get() = t("Billboard", "اللوحة الإعلانية", "לוח פרסום")
     val aspectFit get() = t("Fit to screen", "ملاءمة الشاشة", "התאמה למסך")
     val aspectFill get() = t("Full screen", "ملء الشاشة", "מסך מלא")
     val aspectZoom get() = t("Zoom", "تكبير", "הגדלה")
