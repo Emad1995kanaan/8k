@@ -52,7 +52,6 @@ fun expiryLine(a: Account?): String {
 @Composable
 fun HomeScreen(nav: Navigator, x: Xtream) {
     LaunchedEffect(x) { AccountCache.load(x) }
-    LaunchedEffect(Unit) { com.kanaani.ibo.data.Rates.refresh() }
     var now by remember { mutableLongStateOf(System.currentTimeMillis()) }
     LaunchedEffect(Unit) { while (true) { now = System.currentTimeMillis(); delay(60_000L - now % 60_000L) } }
     val first = remember { FocusRequester() }
@@ -85,8 +84,6 @@ fun HomeScreen(nav: Navigator, x: Xtream) {
                 SmallTile(Str.settings, Icons.Settings, Modifier.weight(1f)) { nav.go(Screen.Settings) }
             }
             Spacer(Modifier.weight(1f))
-            // Cours des devises, au centre en bas.
-            RatesBar(Modifier.align(Alignment.CenterHorizontally))
             Spacer(Modifier.height(6.dp))
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Label(expiryLine(AccountCache.value), 12.sp, C.text2, modifier = Modifier.weight(1f))
