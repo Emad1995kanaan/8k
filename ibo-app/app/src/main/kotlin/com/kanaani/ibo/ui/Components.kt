@@ -63,29 +63,29 @@ import androidx.compose.ui.unit.sp
 import com.kanaani.ibo.R
 import kotlinx.coroutines.delay
 
-/** Palette « BAGHDADI LITE » : noir profond, rouge, blanc et argent (couleurs du logo). */
+/** Palette « 8K PRO » : noir profond, or et argent (couleurs du logo). */
 object C {
-    val bgTop = Color(0xFF0A0506)
-    val bgBottom = Color(0xFF2B0A0D)
-    val glow = Color(0x55E3141F)
-    val panel = Color(0xFF180D0F)
-    val card = Color(0xFF261316)
-    val cardHi = Color(0xFF421A1F)
-    val line = Color(0xFF5C262C)
-    val text = Color(0xFFFFFFFF)
-    val text2 = Color(0xFFE2D2D4)
-    val text3 = Color(0xFF9A8486)
-    val accent = Color(0xFFE3141F)
-    val accentDark = Color(0xFF7E0A10)
+    val bgTop = Color(0xFF080705)
+    val bgBottom = Color(0xFF1E180B)
+    val glow = Color(0x55D4A017)
+    val panel = Color(0xFF15120C)
+    val card = Color(0xFF221D13)
+    val cardHi = Color(0xFF3A2F18)
+    val line = Color(0xFF4D4024)
+    val text = Color(0xFFFAF6EC)
+    val text2 = Color(0xFFD8CCB0)
+    val text3 = Color(0xFF908468)
+    val accent = Color(0xFFD4A017)
+    val accentDark = Color(0xFF7A5A0C)
     val focus = Color.White
-    val error = Color(0xFFFF9C9C)
-    /** Rouge : sélection, boutons principaux, Direct. */
-    val live = listOf(Color(0xFFE3141F), Color(0xFF7E0A10))
+    val error = Color(0xFFFF8A8A)
+    /** Or : sélection, boutons principaux, Direct. */
+    val live = listOf(Color(0xFFC99A1E), Color(0xFF6E500A))
     /** Argent : Films. */
-    val movies = listOf(Color(0xFFB8BDC5), Color(0xFF555A62))
-    /** Rouge sombre : Séries. */
-    val series = listOf(Color(0xFF9E1B24), Color(0xFF3E070B))
-    val small = listOf(Color(0xFF2C1719), Color(0xFF180D0F))
+    val movies = listOf(Color(0xFFA9B0BA), Color(0xFF4E555F))
+    /** Or cuivré : Séries. */
+    val series = listOf(Color(0xFFB9772A), Color(0xFF5E360C))
+    val small = listOf(Color(0xFF2A2416), Color(0xFF17130B))
     val danger = listOf(Color(0xFF7A1C2B), Color(0xFF4A0F1A))
 }
 

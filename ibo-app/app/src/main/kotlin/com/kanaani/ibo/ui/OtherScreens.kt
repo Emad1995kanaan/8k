@@ -192,7 +192,7 @@ fun SettingsScreen(nav: Navigator, x: Xtream) {
             }
             }
             Spacer(Modifier.weight(1f))
-            toast?.let { Label(it, 14.sp, Color(0xFFFF6B70), FontWeight.SemiBold) }
+            toast?.let { Label(it, 14.sp, Color(0xFFF2C94C), FontWeight.SemiBold) }
         }
     }
     when (dialog) {

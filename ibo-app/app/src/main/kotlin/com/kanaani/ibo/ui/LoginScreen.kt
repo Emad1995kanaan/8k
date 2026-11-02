@@ -93,7 +93,7 @@ fun LoginScreen() {
                 Spacer(Modifier.width(36.dp))
             }
             Column(
-                Modifier.width(if (keyboard) 560.dp else 380.dp).clip(RoundedCornerShape(20.dp)).background(Color(0xCC180D0F))
+                Modifier.width(if (keyboard) 560.dp else 380.dp).clip(RoundedCornerShape(20.dp)).background(Color(0xCC161209))
                     .verticalScroll(rememberScrollState()).padding(if (keyboard) 14.dp else 28.dp),
                 verticalArrangement = Arrangement.spacedBy(if (keyboard) 8.dp else 12.dp),
             ) {

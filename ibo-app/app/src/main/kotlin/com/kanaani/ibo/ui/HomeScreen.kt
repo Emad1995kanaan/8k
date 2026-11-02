@@ -104,7 +104,7 @@ private fun RatesBar(modifier: Modifier) {
     fun f(v: Double) = String.format(java.util.Locale.ROOT, "%.2f", v)
     Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Row(
-            Modifier.clip(RoundedCornerShape(14.dp)).background(Color(0x99180D0F)).padding(horizontal = 18.dp, vertical = 8.dp),
+            Modifier.clip(RoundedCornerShape(14.dp)).background(Color(0x99161209)).padding(horizontal = 18.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(22.dp),
         ) {
@@ -119,7 +119,7 @@ private fun RatesBar(modifier: Modifier) {
 @Composable
 private fun RateItem(symbol: String, name: String, value: String) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Label(symbol, 14.sp, Color(0xFFFF6B70), FontWeight.Bold)
+        Label(symbol, 14.sp, Color(0xFFF2C94C), FontWeight.Bold)
         Spacer(Modifier.width(6.dp))
         Label(name, 14.sp, C.text2, FontWeight.SemiBold)
         Spacer(Modifier.width(8.dp))

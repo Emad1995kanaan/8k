@@ -49,7 +49,7 @@ import com.kanaani.ibo.data.Xtream
 private fun DetailBackdrop(image: String?, content: @Composable () -> Unit) {
     Backdrop {
         if (image != null) AsyncImage(image, null, Modifier.fillMaxSize(), contentScale = ContentScale.Crop, alpha = 0.35f)
-        Box(Modifier.fillMaxSize().background(Brush.horizontalGradient(listOf(Color(0xF00A0506), Color(0x990A0506), Color(0x550A0506)))))
+        Box(Modifier.fillMaxSize().background(Brush.horizontalGradient(listOf(Color(0xF00A0907), Color(0x990A0907), Color(0x550A0907)))))
         content()
     }
 }

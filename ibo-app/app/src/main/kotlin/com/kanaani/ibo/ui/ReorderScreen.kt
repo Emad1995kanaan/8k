@@ -197,7 +197,7 @@ fun ReorderScreen(x: Xtream, s: Screen.Reorder) {
                     Modifier.width(200.dp).fillMaxHeight().clip(RoundedCornerShape(14.dp)).background(C.panel).padding(10.dp),
                     verticalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
-                    Label(if (selected.isEmpty()) Str.focusedCategory else Str.selected(selected.size), 12.sp, Color(0xFFFF6B70), FontWeight.Bold)
+                    Label(if (selected.isEmpty()) Str.focusedCategory else Str.selected(selected.size), 12.sp, Color(0xFFF2C94C), FontWeight.Bold)
                     SideButton("▲ " + Str.moveUp, Color(0xFFE53935)) { targets().takeIf { it.isNotEmpty() }?.let { shift(it, -1) } }
                     SideButton("▼ " + Str.moveDown, Color(0xFF1E88E5)) { targets().takeIf { it.isNotEmpty() }?.let { shift(it, +1) } }
                     SideButton("⤒ " + Str.toTop, null) { targets().takeIf { it.isNotEmpty() }?.let { toEdge(it, top = true) } }

@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
 
 /** Client HTTP partagé (API, lecteur, images). */
 object Http {
-    const val USER_AGENT = "BaghdadiLite/1.0 (Android)"
+    const val USER_AGENT = "8KPro/1.0 (Android)"
     val client: OkHttpClient = OkHttpClient.Builder()
         .connectTimeout(15, TimeUnit.SECONDS)
         .readTimeout(40, TimeUnit.SECONDS)
